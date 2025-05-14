@@ -10,7 +10,7 @@ wheels/
 .pytest_cache/
 .env
 .git/
-.backend_fastapi_catalog.egg-info/
+
 # Virtual environments
 .venv
 .venv/
