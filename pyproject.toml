@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "websocket-chat"
+version = "0.1.0"
+description = ""
+authors = ["7project"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "websocket_chat"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
