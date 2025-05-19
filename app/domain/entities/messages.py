@@ -1,0 +1,9 @@
+from dataclasses import dataclass
+
+from domain.entities.base import BaseEntity
+from domain.values.messages import Text
+
+
+@dataclass(eq=False)
+class Message(BaseEntity):
+    text: Text
