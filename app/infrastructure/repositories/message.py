@@ -12,8 +12,9 @@ class MessageRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def save(self, message: MessageModel):
-        self.session.add(message)
+    async def save(self, message: Message):
+        db_message = MessageModel.from_entity(message)
+        self.session.add(db_message)
         await self.session.flush()
 
     # -> list[MessageModel]

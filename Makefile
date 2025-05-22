@@ -3,7 +3,7 @@ EXEC = docker exec -it
 LOGS = docker logs
 ENV = --env-file .env
 APP_FILE = docker-compose/application.yml
-# STORAGES_FILE = docker-compose/storages.yml
+STORAGES_FILE = docker-compose/storages.yml
 # CACHED_FILE = docker-compose/cached.yml
 APP_CONTAINER = chat_app
 
@@ -27,14 +27,14 @@ app-logs:
 test:
 	${EXEC} ${APP_CONTAINER} pytest
 
-# .PHONY: storages
-# storages:
-# 	${DC} -f ${STORAGES_FILE} ${ENV} up --build -d
-#
-# .PHONY: all
-# all:
-# 	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} ${ENV} up --build -d
+.PHONY: storages
+storages:
+	${DC} -f ${STORAGES_FILE} ${ENV} up --build -d
 
-# .PHONY: storages-down
-# storages-down:
-# 	${DC} -f ${STORAGES_FILE} down
+.PHONY: all
+all:
+	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} ${ENV} up --build -d
+
+.PHONY: storages-down
+storages-down:
+	${DC} -f ${STORAGES_FILE} down

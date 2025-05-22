@@ -21,7 +21,7 @@ class PrivateChat(Chat):
 
 @dataclass(eq=False)
 class GroupChat(Chat):
-    participants: set[str] = field(default_factory=set)  # user_oids
+    participants: set[str] = field(default_factory=set)
 
     def add_participant(self, user_oid: str):
         if user_oid not in self.participants:

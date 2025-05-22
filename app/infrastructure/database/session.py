@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 
 from sqlalchemy.ext.asyncio import AsyncAttrs
 
+from settings.config import settings
 
 password = quote_plus(settings.DB_PASSWORD)
 SQLALCHEMY_DATABASE_URL = (

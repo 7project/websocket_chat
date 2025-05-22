@@ -1,11 +1,16 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from infrastructure.database.models.chat_participant import ChatParticipantModel
-from infrastructure.database.models.message import MessageModel
-from infrastructure.database.models.user import UserModel
+from domain.entities.chats import Chat
 from infrastructure.database.session import Base
 from uuid import uuid4
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.database.models.chat_participant import ChatParticipantModel
+    from infrastructure.database.models.message import MessageModel
+    from infrastructure.database.models.user import UserModel
 
 
 class ChatModel(Base):
@@ -26,6 +31,15 @@ class ChatModel(Base):
         back_populates="chat",
         cascade="all, delete-orphan"
     )
+
+    @classmethod
+    def from_entity(cls, chat: Chat) -> "ChatModel":
+        return cls(
+            id=chat.oid,
+            title=chat.title.as_generic_type(),
+            type=chat.chat_type.value
+        )
+
 
 
 class GroupChatModel(ChatModel):

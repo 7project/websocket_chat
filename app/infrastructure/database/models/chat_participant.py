@@ -1,9 +1,14 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from infrastructure.database.models.chat import ChatModel
-from infrastructure.database.models.user import UserModel
 from infrastructure.database.session import Base
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.database.models.chat import ChatModel
+    from infrastructure.database.models.user import UserModel
+
 
 class ChatParticipantModel(Base):
     __tablename__ = "chat_participants"

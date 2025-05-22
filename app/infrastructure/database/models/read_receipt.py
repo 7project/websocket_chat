@@ -4,8 +4,11 @@ from sqlalchemy import String, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from infrastructure.database.session import Base
 
-from infrastructure.database.models.message import MessageModel
-from infrastructure.database.models.user import UserModel
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.database.models.message import MessageModel
+    from infrastructure.database.models.user import UserModel
 
 
 class ReadReceiptModel(Base):

@@ -4,7 +4,7 @@ from typing import List, Optional
 
 class ChatCreateSchema(BaseModel):
     title: str
-    type: str  # private / group
+    type: str
     participants: Optional[List[str]] = []
 
 

@@ -1,12 +1,16 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from domain.entities.users import User
 from infrastructure.database.session import Base
 from uuid import uuid4
 
-from infrastructure.database.models.chat import GroupChatModel
-from infrastructure.database.models.chat_participant import ChatParticipantModel
-from infrastructure.database.models.message import MessageModel
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from infrastructure.database.models.chat import GroupChatModel
+    from infrastructure.database.models.chat_participant import ChatParticipantModel
+    from infrastructure.database.models.message import MessageModel
 
 class UserModel(Base):
     __tablename__ = "users"
@@ -33,3 +37,12 @@ class UserModel(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    @classmethod
+    def from_entity(cls, user: User) -> "UserModel":
+        return cls(
+            id=user.oid,
+            email=user.email.as_generic_type(),
+            username=user.username.as_generic_type(),
+            is_active=user.is_active
+        )

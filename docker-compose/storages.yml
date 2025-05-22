@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - websocked_data:/var/lib/postgresql/data
+    networks:
+      - backend_chat
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: chat_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - backend_chat
+    restart: unless-stopped
+
+networks:
+ backend_chat:
+   driver: bridge
+
+volumes:
+  websocked_data:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+
+from domain.entities.users import User
 from infrastructure.database.models.user import UserModel
 
 
@@ -7,8 +9,9 @@ class UserRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def save(self, user: UserModel):
-        self.session.add(user)
+    async def save(self, user: User):
+        db_user = UserModel.from_entity(user)
+        self.session.add(db_user)
         await self.session.flush()
 
     async def get_by_id(self, user_id: str) -> UserModel:

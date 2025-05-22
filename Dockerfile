@@ -16,3 +16,6 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-root --no-interaction --no-ansi
 
 COPY /app/* .
+COPY app/alembic.ini .
+
+CMD ["uvicorn", "presentation.api.main:create_app", "--host", "0.0.0.0", "--port", "8000"]

@@ -2,12 +2,16 @@ from datetime import datetime
 
 from sqlalchemy import String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List, Optional
 
-from infrastructure.database.models.chat import ChatModel
-from infrastructure.database.models.user import UserModel
+from domain.entities.messages import Message
 from infrastructure.database.session import Base
 from uuid import uuid4
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.database.models.chat import ChatModel
+    from infrastructure.database.models.user import UserModel
 
 
 class MessageModel(Base):
@@ -22,3 +26,14 @@ class MessageModel(Base):
 
     chat: Mapped["ChatModel"] = relationship("ChatModel", back_populates="messages")
     sender: Mapped["UserModel"] = relationship("UserModel", back_populates="sent_messages")
+
+    @classmethod
+    def from_entity(cls, message: "Message") -> "MessageModel":
+        return cls(
+            id=message.oid,
+            chat_id=message.chat_id,
+            sender_id=message.sender_id,
+            text=message.text.as_generic_type(),
+            timestamp=message.timestamp,
+            is_read=message.is_read
+        )
