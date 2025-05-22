@@ -2,8 +2,9 @@ import aioredis
 
 from application.mediator import Mediator
 from domain.events.base import BaseEvent
+from settings.config import settings
 
-redis = aioredis.from_url("redis://redis:6379")
+redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", decode_responses=True)
 
 async def redis_event_publisher(event: BaseEvent):
     await redis.publish("message_events", event.json())
