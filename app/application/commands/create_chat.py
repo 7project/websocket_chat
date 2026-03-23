@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from application.mediator import Mediator
-from domain.entities.chats import GroupChat, ChatTitle
-from domain.values.chats import ChatType
+from domain.entities.chats import GroupChat
+from domain.values.chats import ChatTitle, ChatType
 from infrastructure.repositories.chat import ChatRepository
 
 from domain.events.chats import NewChatCreated
@@ -21,8 +21,16 @@ class CreateChatCommandHandler:
     mediator: Mediator
 
     async def handle(self, command: CreateChatCommand):
-        chat = GroupChat(title=ChatTitle(command.title), participants=set(command.participants), chat_type=ChatType.GROUP)
-        await self.chat_repo.save(chat)
+        all_participants = set(command.participants)
+        all_participants.add(command.creator_id)
+        
+        chat = GroupChat(
+            title=ChatTitle(command.title), 
+            participants=all_participants, 
+            chat_type=ChatType.GROUP
+        )
+        await self.chat_repo.save(chat, creator_id=command.creator_id, participants=list(all_participants))
         await self.mediator.publish(
             NewChatCreated(chat_oid=chat.oid, chat_title=chat.title.as_generic_type())
         )
+        return chat

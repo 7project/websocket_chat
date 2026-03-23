@@ -29,6 +29,12 @@ class ConnectionManager:
                 for socket in sockets:
                     await socket.send_json(message)
 
+    async def broadcast_to_all(self, message: dict):
+        for chat_id in self.active_connections:
+            for sockets in self.active_connections[chat_id].values():
+                for socket in sockets:
+                    await socket.send_json(message)
+
     async def send_to_user(self, chat_id: str, user_id: str, message: dict):
         if chat_id in self.active_connections and user_id in self.active_connections[chat_id]:
             for socket in self.active_connections[chat_id][user_id]:

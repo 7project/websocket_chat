@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from infrastructure.database.models.chat import GroupChatModel
     from infrastructure.database.models.chat_participant import ChatParticipantModel
     from infrastructure.database.models.message import MessageModel
+    from infrastructure.database.models.read_receipt import ReadReceiptModel
 
 class UserModel(Base):
     __tablename__ = "users"
@@ -18,7 +19,8 @@ class UserModel(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid4()))
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(String, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String, nullable=True)
+    is_active: Mapped[bool] = mapped_column(default=True)
 
     sent_messages: Mapped[list["MessageModel"]] = relationship(
         "MessageModel",
@@ -34,6 +36,12 @@ class UserModel(Base):
 
     chat_memberships: Mapped[list["ChatParticipantModel"]] = relationship(
         "ChatParticipantModel",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+
+    read_receipts: Mapped[list["ReadReceiptModel"]] = relationship(
+        "ReadReceiptModel",
         back_populates="user",
         cascade="all, delete-orphan"
     )

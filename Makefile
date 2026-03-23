@@ -9,11 +9,11 @@ APP_CONTAINER = chat_app
 
 .PHONY: app
 app:
-	${DC} -f ${APP_FILE} ${ENV} up --build -d
+	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} ${ENV} up --build -d
 
 .PHONY: app-down
 app-down:
-	${DC} -f ${APP_FILE} down
+	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} down
 
 .PHONY: app-shell
 app-shell:
@@ -38,3 +38,7 @@ all:
 .PHONY: storages-down
 storages-down:
 	${DC} -f ${STORAGES_FILE} down
+
+.PHONY: down
+down:
+	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} down

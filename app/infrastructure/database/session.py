@@ -21,8 +21,16 @@ AsyncSessionLocal = async_sessionmaker(bind=engine,
 
 async def get_db() -> AsyncSession:
     async with AsyncSessionLocal() as session:
-        yield session
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
 
 
 class Base(AsyncAttrs, DeclarativeBase):
     pass
+
+
+from infrastructure.database.models import *  # noqa

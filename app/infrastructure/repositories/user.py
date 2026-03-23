@@ -25,3 +25,7 @@ class UserRepository:
             select(UserModel).where(UserModel.email == email)
         )
         return result.scalars().first()
+
+    async def get_all(self) -> list[UserModel]:
+        result = await self.session.execute(select(UserModel))
+        return result.scalars().all()

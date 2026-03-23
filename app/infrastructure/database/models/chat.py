@@ -1,7 +1,7 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from domain.entities.chats import Chat
+from domain.entities.chats import Chat, GroupChat
 from infrastructure.database.session import Base
 from uuid import uuid4
 
@@ -33,13 +33,29 @@ class ChatModel(Base):
     )
 
     @classmethod
-    def from_entity(cls, chat: Chat) -> "ChatModel":
-        return cls(
-            id=chat.oid,
-            title=chat.title.as_generic_type(),
-            type=chat.chat_type.value
-        )
-
+    def from_entity(cls, chat: Chat, creator_id: str = None, participants: list[str] = None) -> "ChatModel":
+        from infrastructure.database.models.chat_participant import ChatParticipantModel
+        
+        if isinstance(chat, GroupChat):
+            db_chat = GroupChatModel(
+                id=chat.oid,
+                title=chat.title.as_generic_type(),
+                type=chat.chat_type.value,
+                creator_id=creator_id
+            )
+        else:
+            db_chat = cls(
+                id=chat.oid,
+                title=chat.title.as_generic_type(),
+                type=chat.chat_type.value
+            )
+        
+        if participants:
+            for user_id in participants:
+                participant = ChatParticipantModel(chat_id=db_chat.id, user_id=user_id)
+                db_chat.participants.append(participant)
+        
+        return db_chat
 
 
 class GroupChatModel(ChatModel):

@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from infrastructure.database.models.chat import ChatModel
     from infrastructure.database.models.user import UserModel
+    from infrastructure.database.models.read_receipt import ReadReceiptModel
 
 
 class MessageModel(Base):
@@ -26,6 +27,11 @@ class MessageModel(Base):
 
     chat: Mapped["ChatModel"] = relationship("ChatModel", back_populates="messages")
     sender: Mapped["UserModel"] = relationship("UserModel", back_populates="sent_messages")
+    read_receipts: Mapped[list["ReadReceiptModel"]] = relationship(
+        "ReadReceiptModel",
+        back_populates="message",
+        cascade="all, delete-orphan"
+    )
 
     @classmethod
     def from_entity(cls, message: "Message") -> "MessageModel":

@@ -7,11 +7,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context  # noqa
 
-from infrastructure.database.models.message import MessageModel  # noqa
-from infrastructure.database.models.user import UserModel  # noqa
-from infrastructure.database.models.chat import ChatModel, GroupChatModel  # noqa
-from infrastructure.database.models.chat_participant import ChatParticipantModel  # noqa
-from infrastructure.database.models.read_receipt import ReadReceiptModel  # noqa
+from infrastructure.database.models import *  # noqa
 from infrastructure.database.session import Base
 from settings.config import settings
 
